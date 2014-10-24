@@ -1,10 +1,12 @@
 getting_and_cleaning_data_project
 =================================
 
-Code for project in the Getting and Cleaning Data.  Will include the code, readme and data dictionary
+Readme for project in the Getting and Cleaning Data.  
+
+Repository will include the code, output from code, readme and data dictionary
 
 
-Code Description
+Code
 
 Purpose
 
@@ -18,3 +20,13 @@ Summarize single dataframe by selected categories and average the relevant measu
 Output results to a text file - tidy_data.txt
 
 
+Output - tidy_data.txt
+
+Output from the code.  Takes raw data from Samsung Galaxy S accelerometers and summarizes 
+it by averaging selected variables related to the mean and SD of base variables.
+Data is summarized by activity and subject.
+
+
+Data dictionary
+
+Used to understand variables in the data.

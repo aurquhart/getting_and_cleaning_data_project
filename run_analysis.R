@@ -4,16 +4,23 @@
 
 
 getwd() #get working directory
+
+#The working directory should have the dataset folder in it, unzipped
+#Important - the unzipped dataset has a folder structure. This
+#folder structure should be retained in root folder.
+
+#Set working directory
+setwd('C:/Users/aurquhart/Documents/GitHub/getting_and_cleaning_data_project')
+
+
+#Install packages
 install.packages("plyr")
 library(plyr)
-#Question 1
 
-#help(read.table)
 
 #I have a features file that is the headers
 
 df_features <- read.table("./getdata-projectfiles-UCI HAR Dataset/UCI HAR Dataset/features.txt",header = FALSE)
-#class(df_features)
 #Filter on just field I need and convert 
 df_features_filtered = df_features$V2
 
@@ -41,10 +48,8 @@ df_test_subject <- rename(df_test_subject, c("V1"="Subject"))
 #head(df_test_subject)
 
 
-#as these 3 have the same records I should be able to join them
-#As subject and label are simplest I'll join them first
+#as these 3 have the same number of records I will join them based on rows
 
-#help(rbind)
 test_merge <-cbind(df_test_subject,df_test_label,df_test)
 
 #Add a flag to show whether its test or train
@@ -71,14 +76,15 @@ total_df <- rbind(train_merge,test_merge)
 #Add in the correct activity labels
 total_df2 <- merge(total_df, df_activities, by.x = "Label", by.y = "V1")
 
-
+#Rename the activity label
 total_df2 <- rename(total_df2, c("V2"="Activity"))
 
-head(total_df2)
-summary(total_df2)
+#head(total_df2)
+#summary(total_df2)
 
 #Next set of analysis will only focus on columns containing mean or SD for each variable
 #Will not include mean frequency which is a different field
+#This should be better automated in next phase of development
 df_mean_sd <- total_df2[,c("Subject","Activity", "tBodyAcc.mean...X", "tBodyAcc.mean...Y" ,                  
                         "tBodyAcc.mean...Z","tBodyAcc.std...X","tBodyAcc.std...Y" ,"tBodyAcc.std...Z" ,
                         "tBodyAcc.std...X","tBodyAcc.std...Y","tBodyAcc.std...Z",
@@ -119,6 +125,7 @@ df_mean_sd <- total_df2[,c("Subject","Activity", "tBodyAcc.mean...X", "tBodyAcc.
 #colnames(df_test)
 
 #Finally get the average for each variable by activity
+#Again needs automated - script had to be built in excel
 tidydata <- ddply(df_mean_sd, c("Activity","Subject"), summarise,
                   AVG_tBodyAcc.mean...Z =mean(                        tBodyAcc.mean...Z),
                   AVG_tBodyAcc.std...X =mean(                        tBodyAcc.std...X),
@@ -191,8 +198,9 @@ tidydata <- ddply(df_mean_sd, c("Activity","Subject"), summarise,
                                     
 )
 
-tidydata
+#tidydata
+
+write.table(tidydata,file = "tidy_date.txt",row.names = FALSE)
 
 
-tidydf <- by(df_mean_sd$"tBodyAcc.mean...X",df_mean_sd$Activity,mean)
-tidydf
+
